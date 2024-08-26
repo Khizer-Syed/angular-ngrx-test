@@ -18,5 +18,5 @@ export const selectCartFeature = createFeatureSelector<CartFeatureState>('cartFe
 
 export const selectNumberOfCartItems = createSelector(
   selectCartFeature,
-  (state: CartFeatureState) => state.numberOfItems
+  (state: CartFeatureState) => state.totalNumberOfItems
 );

@@ -17,7 +17,9 @@ export class CatalogPageComponent {
   items$ = this.store.select(selectItems);
 
   constructor(private readonly store: Store<ItemsFeatureState>) {
-    this.store.dispatch(CatalogPageActions.getItems());
+    /**
+     * 1. Dispatch action CatalogPageActions.getItems() to fetch the items from the store
+     */
   }
 
   addItemToCart(item: Item) {

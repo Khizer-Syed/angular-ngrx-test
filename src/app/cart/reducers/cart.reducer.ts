@@ -1,12 +1,13 @@
-import {createReducer, on} from '@ngrx/store';
-import {CartFeatureState} from "./cart.selector";
-import {CartItem} from "../model/cart-item.model";
-import {CatalogPageActions} from "../../catalog/actions/catalog-page.actions";
-import {CartPageActions} from "../actions/cart-page.actions";
+import { createReducer, on } from '@ngrx/store';
+import { CartFeatureState } from "./cart.selector";
+import { CartItem } from "../model/cart-item.model";
+import { CatalogPageActions } from "../../catalog/actions/catalog-page.actions";
+import { CartPageActions } from "../actions/cart-page.actions";
+
 
 export const initialState: CartFeatureState = {
   cartItems: [],
-  numberOfItems: 0
+  totalNumberOfItems: 0
 };
 
 const getNumberOfItems = (cartItems: CartItem[]): number => {
@@ -15,44 +16,40 @@ const getNumberOfItems = (cartItems: CartItem[]): number => {
 
 export const cartReducer = createReducer(
   initialState,
-  on(CatalogPageActions.addItemToCart, (store: CartFeatureState, result) => {
-      const existingItem = store.cartItems.find(({id}) => id === result.item.id);
-
+  on(CatalogPageActions.addItemToCart, (state: CartFeatureState, { item }) => {
+    /**
+     * 1. Find out if the item already exists in the cart
+     * 2. If the item exists in the cart, then you need to update the item count as well as totalNumberOfItems.
+     * 3. If the item does not exist in the cart, then you need to add the item, update the item count and totalNumberOfItems
+     */
       return {
-        ...store,
-        cartItems: store.cartItems.map((cartItem) => cartItem.item.id !== result.item.id
-          ? cartItem
-          : {...cartItem, numberOfItems: cartItem.numberOfItems + 1}
-        ).concat(existingItem ? [] : [{id: result.item.id, numberOfItems: 1, item: result.item}]),
-        numberOfItems: store.numberOfItems + 1
+        ...state
       }
     }
   ),
-  on(CartPageActions.reduceNumberOfItemInCart, (store: CartFeatureState, result) => {
+  on(CartPageActions.reduceNumberOfItemInCart, (state: CartFeatureState, { cartItem }) => {
+    /**
+     * 1. You need to update the item count as well as totalNumberOfItems.
+     * 2. If the item count is 0, then you need to remove the item from the cart
+     */
     return {
-      ...store,
-      cartItems: store.cartItems.map((cartItem) => cartItem.id !== result.cartItem.id
-        ? cartItem
-        : {...cartItem, numberOfItems: cartItem.numberOfItems - 1}
-      ).filter(({numberOfItems}) => numberOfItems > 0),
-      numberOfItems: store.numberOfItems - 1
+      ...state
     }
   }),
-  on(CartPageActions.increaseNumberOfItemInCart, (store: CartFeatureState, result) => {
+  on(CartPageActions.increaseNumberOfItemInCart, (state: CartFeatureState, { cartItem }) => {
+    /**
+     * You just need to increase the item count
+     */
     return {
-      ...store,
-      cartItems: store.cartItems.map((cartItem) => cartItem.id !== result.cartItem.id
-        ? cartItem
-        : {...cartItem, numberOfItems: cartItem.numberOfItems + 1}
-      ).filter(({numberOfItems}) => numberOfItems > 0),
-      numberOfItems: store.numberOfItems + 1
+      ...state
     }
   }),
-  on(CartPageActions.removeItemFromCart, (store: CartFeatureState, result) => {
-    const cartItems = [...store.cartItems.filter(item => item.id !== result.cartItem.id)];
+  on(CartPageActions.removeItemFromCart, (state: CartFeatureState, { cartItem }) => {
+    /**
+     * You need to remove the item from the cart
+     */
     return {
-      cartItems,
-      numberOfItems: getNumberOfItems(cartItems)
+      ...state
     }
   }),
 );

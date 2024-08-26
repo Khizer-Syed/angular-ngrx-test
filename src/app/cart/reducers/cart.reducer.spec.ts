@@ -23,7 +23,7 @@ describe('Cart Reducer', () => {
       const result = cartReducer(initialState, action);
 
       it('should increment the number of items in the cart', () => {
-        expect(result.numberOfItems).toEqual(1);
+        expect(result.totalNumberOfItems).toEqual(1);
       });
 
       it('should add the catalog item as cart item', () => {
@@ -55,7 +55,7 @@ describe('Cart Reducer', () => {
           }
         ] as CartItem[],
         totalPrice: 12,
-        numberOfItems: 2
+        totalNumberOfItems: 2
       } as CartFeatureState;
 
       let result = cartReducer(state, action);

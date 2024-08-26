@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { map } from 'rxjs/operators';
 import {itemAddedSuccess} from "../actions/cart-api.actions";
 import {CatalogPageActions} from "../../catalog/actions/catalog-page.actions";
 
